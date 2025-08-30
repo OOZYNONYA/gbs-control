@@ -1768,7 +1768,7 @@ void LCD_USER_FilterSET()
 
    
       
-      if      (strcmp(Filter[LCD_encoder_pos],"BACK") == 0)               {filter_selection = 0;    LCD_resetToXMenu(RETURN_TO_OPTIONS);        break;}//return to previous menu (options)                return;}
+      if      (strcmp(Filter[LCD_encoder_pos],"BACK") == 0)               {filter_selection = 0;    LCD_resetToXMenu(RETURN_TO_OPTIONS);        return;}//return to previous menu (options)                return;}
       else if (strcmp(Filter[LCD_encoder_pos],"SCANLINES") == 0)          {filter_selection = 1;                                                break;}
       else if (strcmp(Filter[LCD_encoder_pos],"LINE FILTER") == 0)        {filter_selection = 2;                                                break;}
       else if (strcmp(Filter[LCD_encoder_pos],"PEAKING") == 0)            {filter_selection = 3;                                                break;}
@@ -1820,7 +1820,7 @@ void LCD_USER_FilterSET()
       if (digitalRead(LCD_pin_switch) == LOW) {
       while (digitalRead(LCD_pin_switch) == LOW) { delay(10); }
 
-       if      (strcmp(ScanlinesOptions[LCD_encoder_pos], "BACK") == 0)   {  filter_selection = 0;                                             break;}
+       if      (strcmp(ScanlinesOptions[LCD_encoder_pos], "BACK") == 0)   {  filter_selection = 0;                                             return;}
        else if (strcmp(ScanlinesOptions[LCD_encoder_pos], "OFF" ) == 0)   {  uopt->wantScanlines = false; uopt->scanlineStrength = 0x00;       break;}                                                         //... basically we want the user to instantly have visual confirmation when turning on scanlines.
        else if (strcmp(ScanlinesOptions[LCD_encoder_pos], "ON"  ) == 0)   {  uopt->wantScanlines = true;  if (LCDslotsObject.slot[currentSlotIndex].scanlinesStrength == 0x00) {uopt->scanlineStrength = 0x20;} else {uopt->scanlineStrength = LCDslotsObject.slot[currentSlotIndex].scanlinesStrength;}    break;}  
        else if (strcmp(ScanlinesOptions[LCD_encoder_pos], "10%" ) == 0)   {  uopt->wantScanlines = true;  uopt->scanlineStrength = 0x10;       break;}
@@ -1872,7 +1872,7 @@ void LCD_USER_FilterSET()
       if (digitalRead(LCD_pin_switch) == LOW) {
       while (digitalRead(LCD_pin_switch) == LOW) { delay(10); }
 
-       if      (strcmp(LineFilterOptions[LCD_encoder_pos], "BACK") == 0)   {  filter_selection == 0;                                                                       break;}
+       if      (strcmp(LineFilterOptions[LCD_encoder_pos], "BACK") == 0)   {  filter_selection == 0;                                                                       return;}
        else if (strcmp(LineFilterOptions[LCD_encoder_pos], "OFF" ) == 0)   {  uopt->wantVdsLineFilter = 0;  saveUserPrefs();                                  delay(100);  break;}
        else if (strcmp(LineFilterOptions[LCD_encoder_pos], "ON"  ) == 0)   {  uopt->wantVdsLineFilter = 1;  saveUserPrefs();                                  delay(100);  break;}
      
@@ -1917,7 +1917,7 @@ void LCD_USER_FilterSET()
       if (digitalRead(LCD_pin_switch) == LOW) {
       while (digitalRead(LCD_pin_switch) == LOW) { delay(10); }
 
-       if      (strcmp(PeakingOptions[LCD_encoder_pos], "BACK") == 0)   {  filter_selection == 0;                                                                 break;}
+       if      (strcmp(PeakingOptions[LCD_encoder_pos], "BACK") == 0)   {  filter_selection == 0;                                                                 return;}
        else if (strcmp(PeakingOptions[LCD_encoder_pos], "OFF" ) == 0)   {  uopt->wantPeaking = 0;  saveUserPrefs();                                  delay(100);  break;}
        else if (strcmp(PeakingOptions[LCD_encoder_pos], "ON"  ) == 0)   {  uopt->wantPeaking = 1;  saveUserPrefs();                                  delay(100);  break;}
      
@@ -1961,7 +1961,7 @@ void LCD_USER_FilterSET()
       if (digitalRead(LCD_pin_switch) == LOW) {
       while (digitalRead(LCD_pin_switch) == LOW) { delay(10); }
 
-       if      (strcmp(StepResponseOptions[LCD_encoder_pos], "BACK") == 0)   { filter_selection == 0;                                                                      break;}
+       if      (strcmp(StepResponseOptions[LCD_encoder_pos], "BACK") == 0)   { filter_selection == 0;                                                                      return;}
        else if (strcmp(StepResponseOptions[LCD_encoder_pos], "OFF" ) == 0)   { uopt->wantStepResponse = 0;  saveUserPrefs();                                  delay(100);  break;}
        else if (strcmp(StepResponseOptions[LCD_encoder_pos], "ON"  ) == 0)   { uopt->wantStepResponse = 1;  saveUserPrefs();                                  delay(100);  break;}
      
@@ -2798,3 +2798,4 @@ void LCD_resetToXMenu(int location) //uses enum LOCATIONS for values
     }
 
 }
+
