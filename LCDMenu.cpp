@@ -29,9 +29,9 @@ extern WebSocketsServer webSocket;
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 hd44780_I2Cexp lcd;       //LCD this is the member we are using through out the program to print to lcd
 //LCD geometry
-const int LCD_COLS = 16;  //LCD
-const int LCD_ROWS = 2;   //LCD
-int	status = lcd.begin(LCD_COLS, LCD_ROWS); //LCD
+const int LCD_COLS = 16;  
+const int LCD_ROWS = 2;   
+int	status = lcd.begin(LCD_COLS, LCD_ROWS); 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////
@@ -39,7 +39,7 @@ SlotMetaArray LCDslotsObject; // contains all of our saved preset names
 /////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////
-GlobalSlotOptions globalOptions[MAX_SLOTS]; //stores all GLOBAL_SETTINGS_PER_USER_DATA
+GlobalSlotOptions globalOptions[MAX_SLOTS]; //contains all GLOBAL_SETTINGS_PER_USER_DATA
 /////////////////////////////////////////////////////////////////////////
 
 
@@ -53,27 +53,27 @@ String LCD_Option[8] =      {"FILTER SETTINGS","GLOBAL SETTINGS","LCD SETTINGS",
 
 ////////////ENCODER AND MENU RELATED VARIABLES///////////////////////////////////////////
 //default values
-int LCD_menuItem = 1;               //default is 1 (displays main menu)
-int LCD_subsetFrame = 0;            //0 default
+int LCD_menuItem     = 1;           //default is 1 (displays main menu)
+int LCD_subsetFrame  = 0;           //0 default
 int LCD_selectOption = 0;           //0 default
-int LCD_page = 0;                   //0 default
+int LCD_page         = 0;           //0 default
 //default values
-int LCD_lastCount = 0;
-volatile int LCD_encoder_pos = 0;   //0 default
-volatile int LCD_main_pointer = 0;  //0 default // volatile vars change done with ISR
+int LCD_lastCount              = 0;
+volatile int LCD_encoder_pos   = 0;   //0 default
+volatile int LCD_main_pointer  = 0;  //0 default // volatile vars change done with ISR
 volatile int LCD_pointer_count = 0; //0 default
-volatile int LCD_sub_pointer = 0;   //0 default
+volatile int LCD_sub_pointer   = 0;   //0 default
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 
 ////////////////MENU SAVE STATE VARIABLES////////////////////////////////
-int     SAVESTATE_menuItem          =     0;
-int     SAVESTATE_subsetFrame       =     0;
-int     SAVESTATE_page              =     0;
-int     SAVESTATE_main_pointer      =     0;
-int     SAVESTATE_selectOption      =     0;
-int     SAVESTATE_pointer_count     =     0; 
-int     SAVESTATE_sub_pointer       =     0;
+int     SAVESTATE_menuItem          = 0;
+int     SAVESTATE_subsetFrame       = 0;
+int     SAVESTATE_page              = 0;
+int     SAVESTATE_main_pointer      = 0;
+int     SAVESTATE_selectOption      = 0;
+int     SAVESTATE_pointer_count     = 0; 
+int     SAVESTATE_sub_pointer       = 0;
 
 LCDMenuState SAVESTATE_currentMenu;
 /////////////////////////////////////////////////////////////////////////
@@ -89,14 +89,14 @@ LCDMenuState currentMenu = MAIN_MENU;
 bool screenSaverActive = false; //lcd screensaver
 //unsigned long lastActivityTime = 0;
 unsigned long lastActivityTime = millis();
-int lastClkState = HIGH;
+int lastClkState   = HIGH;
 bool HALT_LCD_MENU = false;
 //////////////////////////////////////////////////////////////////////////////////////
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-const int LCD_pin_clk = 14;            //D5 = GPIO14 (input of one direction for encoder)
-const int LCD_pin_data = 13;           //D7 = GPIO13	(input of one direction for encoder)
+const int LCD_pin_clk    = 14;            //D5 = GPIO14 (input of one direction for encoder)
+const int LCD_pin_data   = 13;           //D7 = GPIO13	(input of one direction for encoder)
 const int LCD_pin_switch = 0;          //D3 = GPIO0 pulled HIGH, else boot fail (middle push button for encoder)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -105,17 +105,17 @@ const int LCD_pin_switch = 0;          //D3 = GPIO0 pulled HIGH, else boot fail 
 
 
 //ENCODER SELECTABLE OPTIONS//////////////////////////// 
-//These are edited and saved via the EC11 encoder in Options menu, also through LCD_settings.txt with loading function.
-int LCD_BACKLIGHT_ALWAYS_OFF = 0;  
-int USE_SCREENSAVER = 0;
-int USE_SPLASH_SCREENSAVER = 0;
+//These are edited and saved to LCD_settings.txt via the EC11 encoder in Options menu, also through LCD_settings.txt with loading function.
+int LCD_BACKLIGHT_ALWAYS_OFF    = 0;  
+int USE_SCREENSAVER             = 0;
+int USE_SPLASH_SCREENSAVER      = 0;
 int USE_TURNOFF_LCD_SCREENSAVER = 0; 
-int LCD_REFRESHRATE = 200;            
+int LCD_REFRESHRATE             = 200;            
 int LOAD_DIRECTLY_INTO_SUB_MENU = 0;  
-int CURSOR_ON_MENU_AT_STARTUP = 0;
-int SCREEN_TIMEOUT = 60000; 
-int USE_SIGNAL_SCREENSAVER = 0;
-int USE_GLOBALSET_PER_SLOT = 0;
+int CURSOR_ON_MENU_AT_STARTUP   = 0;
+int SCREEN_TIMEOUT              = 60000; 
+int USE_SIGNAL_SCREENSAVER      = 0;
+int USE_GLOBALSET_PER_SLOT      = 0;
 //ENCODER SELECTABLE OPTIONS/////////////////////////////
 
 
@@ -273,7 +273,7 @@ void LCD_USER_MAIN_MENU()
         lcd.setCursor(0,1); 
         lcd.print("LOADED!");  
         
-           // }
+           
             if (videoMode == 0 && GBS::STATUS_SYNC_PROC_HSACT::read())
                 videoMode = rto->videoStandardInput;
             uopt->presetPreference = Output1024P;
@@ -454,7 +454,7 @@ if (LCD_menuItem == 2 && LCD_selectOption == 2)
         delay(LCD_REFRESHRATE); 
         LCD_page = 1;
         LCD_main_pointer = 0;
-        lcd_OPTIONS_pointerfunction(); //if you add a new option to this section need to update this function to handle new out of bound values
+        lcd_OPTIONS_pointerfunction(); //if you add a new option to this section need to update this function to handle new out-of-bound values
         
         lcd.clear();
         lcd.setCursor(0,0); 
@@ -632,14 +632,14 @@ if (LCD_menuItem == 2 && LCD_selectOption == 2)
     // Resolution
     String resText;
     switch (rto->presetID) {
-    case 0x01: case 0x11: resText = "1280x960"; break;
+    case 0x01: case 0x11: resText = "1280x960";  break;
     case 0x02: case 0x12: resText = "1280x1024"; break;
-    case 0x03: case 0x13: resText = "1280x720"; break;
+    case 0x03: case 0x13: resText = "1280x720";  break;
     case 0x05: case 0x15: resText = "1920x1080"; break;
     case 0x06: case 0x16: resText = "DOWNSCALE"; break;
-    case 0x04: resText = "720x480"; break;
-    case 0x14: resText = "768x576"; break;
-    default:   resText = "BYPASS"; break;
+    case 0x04:            resText = "720x480";   break;
+    case 0x14:            resText = "768x576";   break;
+    default:              resText = "BYPASS";    break;
 }
 
                  
@@ -765,16 +765,16 @@ void lcd_subpointerfunction()
 
 
 void initDefault_GLOBAL_PER_SLOT(uint8_t slotIndex) {
-    globalOptions[slotIndex].matchPresetSource = 1;
-    globalOptions[slotIndex].wantFullHeight = 1;
-    globalOptions[slotIndex].preferScalingRgbhv = 1;
+    globalOptions[slotIndex].matchPresetSource   = 1;
+    globalOptions[slotIndex].wantFullHeight      = 1;
+    globalOptions[slotIndex].preferScalingRgbhv  = 1;
     globalOptions[slotIndex].wantOutputComponent = 0;
-    globalOptions[slotIndex].PalForce60 = 0;
+    globalOptions[slotIndex].PalForce60          = 0;
     globalOptions[slotIndex].disableExternalClockGenerator = 0;
     globalOptions[slotIndex].enableCalibrationADC = 1;
-    globalOptions[slotIndex].enableFrameTimeLock = 0;
-    globalOptions[slotIndex].frameTimeLockMethod = 0;
-    globalOptions[slotIndex].deintMode = 0;
+    globalOptions[slotIndex].enableFrameTimeLock  = 0;
+    globalOptions[slotIndex].frameTimeLockMethod  = 0;
+    globalOptions[slotIndex].deintMode            = 0;
     memset(globalOptions[slotIndex].reserved, 0, sizeof(globalOptions[slotIndex].reserved));
 }
 
@@ -917,9 +917,21 @@ const char slotCharset[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcedefghijklmnopqrstuvwxy
             saveUserPrefs();
 
             /////////apply global_per_slot_settings///////////////////////////////////////
-            int slotIndexGlobal = getCurrentSlotIndexFromPresetSlotChar(uopt->presetSlot);
-            apply_GLOBAL_PER_SLOT(slotIndexGlobal);
+            int slotIndexApply = getCurrentSlotIndexFromPresetSlotChar(uopt->presetSlot);
+            apply_GLOBAL_PER_SLOT(slotIndexApply);
+            delay(50);
             //////////////////////////////////////////////////////////////////////////////
+
+
+            //////apply filters per slot/////////////////////////////////////////////
+            uopt->wantScanlines     =  LCDslotsObject.slot[slotIndexApply].scanlines;
+            uopt->scanlineStrength  =  LCDslotsObject.slot[slotIndexApply].scanlinesStrength;
+            uopt->wantVdsLineFilter =  LCDslotsObject.slot[slotIndexApply].wantVdsLineFilter;
+            uopt->wantStepResponse  =  LCDslotsObject.slot[slotIndexApply].wantStepResponse;
+            uopt->wantPeaking       =  LCDslotsObject.slot[slotIndexApply].wantPeaking;
+            delay(50);
+            /////////////////////////////////////////////////////////////////////////
+       
 
                   lcd.clear();
                   lcd.setCursor(0,0); 
@@ -1266,9 +1278,6 @@ else if (CURSOR_ON_MENU_AT_STARTUP != 0)
     return;
     
 }
-
-       
-   
 }
 
 void LCD_Load_PresetIDs_Into_slotobject()
@@ -1758,16 +1767,16 @@ void loadLCDSettingsFile() {
     }
 
     // Read each setting from the file and assign values to variables
-    LCD_BACKLIGHT_ALWAYS_OFF = file.readStringUntil('\n').toInt();
-    USE_SCREENSAVER = file.readStringUntil('\n').toInt();
-    USE_SPLASH_SCREENSAVER = file.readStringUntil('\n').toInt();
-    USE_TURNOFF_LCD_SCREENSAVER = file.readStringUntil('\n').toInt();  // Read new setting
-    LCD_REFRESHRATE = file.readStringUntil('\n').toInt();
-    LOAD_DIRECTLY_INTO_SUB_MENU = file.readStringUntil('\n').toInt();
-    CURSOR_ON_MENU_AT_STARTUP = file.readStringUntil('\n').toInt();
-    SCREEN_TIMEOUT = file.readStringUntil('\n').toInt();
-    USE_SIGNAL_SCREENSAVER = file.readStringUntil('\n').toInt();
-    USE_GLOBALSET_PER_SLOT = file.readStringUntil('\n').toInt();
+    LCD_BACKLIGHT_ALWAYS_OFF      = file.readStringUntil('\n').toInt();
+    USE_SCREENSAVER               = file.readStringUntil('\n').toInt();
+    USE_SPLASH_SCREENSAVER        = file.readStringUntil('\n').toInt();
+    USE_TURNOFF_LCD_SCREENSAVER   = file.readStringUntil('\n').toInt(); 
+    LCD_REFRESHRATE               = file.readStringUntil('\n').toInt();
+    LOAD_DIRECTLY_INTO_SUB_MENU   = file.readStringUntil('\n').toInt();
+    CURSOR_ON_MENU_AT_STARTUP     = file.readStringUntil('\n').toInt();
+    SCREEN_TIMEOUT                = file.readStringUntil('\n').toInt();
+    USE_SIGNAL_SCREENSAVER        = file.readStringUntil('\n').toInt();
+    USE_GLOBALSET_PER_SLOT        = file.readStringUntil('\n').toInt();
 
     delay(50);
     file.close();
@@ -2094,16 +2103,16 @@ void LCD_USER_FilterSET()
       if (digitalRead(LCD_pin_switch) == LOW) {
       while (digitalRead(LCD_pin_switch) == LOW) { delay(10); }
 
-       if      (strcmp(ScanlinesOptions[LCD_encoder_pos], "BACK") == 0)   {  filter_selection = 0;        lastActivityTime = millis();        return;}
-       else if (strcmp(ScanlinesOptions[LCD_encoder_pos], "OFF" ) == 0)   {  uopt->wantScanlines = false; uopt->scanlineStrength = 0x00;       break;}                                                         //... basically we want the user to instantly have visual confirmation when turning on scanlines.
-       else if (strcmp(ScanlinesOptions[LCD_encoder_pos], "ON"  ) == 0)   {  uopt->wantScanlines = true;  if (LCDslotsObject.slot[currentSlotIndex].scanlinesStrength == 0x00) {uopt->scanlineStrength = 0x20;} else {uopt->scanlineStrength = LCDslotsObject.slot[currentSlotIndex].scanlinesStrength;}    break;}  
-       else if (strcmp(ScanlinesOptions[LCD_encoder_pos], "10%" ) == 0)   {  uopt->wantScanlines = true;  uopt->scanlineStrength = 0x10;       break;}
-       else if (strcmp(ScanlinesOptions[LCD_encoder_pos], "20%" ) == 0)   {  uopt->wantScanlines = true;  uopt->scanlineStrength = 0x20;       break;}
-       else if (strcmp(ScanlinesOptions[LCD_encoder_pos], "30%" ) == 0)   {  uopt->wantScanlines = true;  uopt->scanlineStrength = 0x30;       break;}
-       else if (strcmp(ScanlinesOptions[LCD_encoder_pos], "40%" ) == 0)   {  uopt->wantScanlines = true;  uopt->scanlineStrength = 0x40;       break;}
-       else if (strcmp(ScanlinesOptions[LCD_encoder_pos], "50%" ) == 0)   {  uopt->wantScanlines = true;  uopt->scanlineStrength = 0x50;       break;}
+       if      (strcmp(ScanlinesOptions[LCD_encoder_pos], "BACK") == 0)   {  filter_selection = 0;        lastActivityTime = millis();                          return;}
+       else if (strcmp(ScanlinesOptions[LCD_encoder_pos], "OFF" ) == 0)   {  uopt->wantScanlines = false; uopt->scanlineStrength = 0x00;     saveUserPrefs();    break;}                                                         //... basically we want the user to instantly have visual confirmation when turning on scanlines.
+       else if (strcmp(ScanlinesOptions[LCD_encoder_pos], "ON"  ) == 0)   {  uopt->wantScanlines = true;  if (LCDslotsObject.slot[currentSlotIndex].scanlinesStrength == 0x00) {uopt->scanlineStrength = 0x20; } else {uopt->scanlineStrength = LCDslotsObject.slot[currentSlotIndex].scanlinesStrength;}  saveUserPrefs(); break;}  
+       else if (strcmp(ScanlinesOptions[LCD_encoder_pos], "10%" ) == 0)   {  uopt->wantScanlines = true;  uopt->scanlineStrength = 0x10;     saveUserPrefs();    break;}
+       else if (strcmp(ScanlinesOptions[LCD_encoder_pos], "20%" ) == 0)   {  uopt->wantScanlines = true;  uopt->scanlineStrength = 0x20;     saveUserPrefs();    break;}
+       else if (strcmp(ScanlinesOptions[LCD_encoder_pos], "30%" ) == 0)   {  uopt->wantScanlines = true;  uopt->scanlineStrength = 0x30;     saveUserPrefs();    break;}
+       else if (strcmp(ScanlinesOptions[LCD_encoder_pos], "40%" ) == 0)   {  uopt->wantScanlines = true;  uopt->scanlineStrength = 0x40;     saveUserPrefs();    break;}
+       else if (strcmp(ScanlinesOptions[LCD_encoder_pos], "50%" ) == 0)   {  uopt->wantScanlines = true;  uopt->scanlineStrength = 0x50;     saveUserPrefs();    break;}
      
-      //break;
+      //break;  //think I need to save each to slotsobject also
     }
 
 
@@ -2253,10 +2262,8 @@ void LCD_USER_FilterSET()
 
     
 
-
-
     if (currentSlotIndex >= 0 && currentSlotIndex < SLOTS_TOTAL) {
-          LCDslotsObject.slot[currentSlotIndex].scanlines         = uopt->wantScanlines ? 1 : 0;
+          LCDslotsObject.slot[currentSlotIndex].scanlines         = uopt->wantScanlines;
           LCDslotsObject.slot[currentSlotIndex].scanlinesStrength = uopt->scanlineStrength;
 
         //new

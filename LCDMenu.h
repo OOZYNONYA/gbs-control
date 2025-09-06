@@ -21,18 +21,19 @@
 
                                        //WARNING: do not enable without backing up your current slots file in the web application                                  
 #define FACTORY_RESET_ALL      0       //if enabled: all saved PRESET SLOTS will be deleted with "FACTORY RESET" of system. by default: factory reset just resets global settings,LCD settings,filter settings
-                                       //0 = disabled
-                                       //1 = enabled
+                                       // 0 = disabled
+                                       // 1 = enabled
 
 
 #define SIGNAL_SCROLL_SPEED    5000    //control the speed of the scrolling text in SIGNAL mode. displays Resolution for x_amount_of_time, scrolls, then displays SLOT NAME for x_amount_of_time
-                                       //1000 = 1 second, 10000 = 10 SECONDS                                    
+                                       // 1000  = 1 second,
+                                       // 10000 = 10 SECONDS                                    
 
 
 //if you want to make your own screensaver splash go to " void LCD_printSplash(int logo_select) " in the LCDMenu.cpp file.
 //and use the link listed there to generate your own splash screen to use with this! just replace whats there and add nothing more. 
 //or just make your own custom version however you want with lcd.print("example");
-#define LCD_SPLASH_SCREEN_TYPE 2       // 0 = add in your own custom text in LCDmenu.cpp LCD_printSplash() function
+#define LCD_SPLASH_SCREEN_TYPE 2       // 0 = add in your own custom text in LCDmenu.cpp LCD_printSplash() function (located in LCDMenu.cpp)
                                        // 1 = display ANIMATED "GBS[C]" splashscreen
                                        // 2 = display NON-animated "GBS[C]" splashscreen
                                     
@@ -81,7 +82,7 @@
 //WARNING:                                   Backup your current GBSCONTROL file in the webapp before using these. they may not be 100% safe.
 
 //RESET GBS                                 //restarts GBS
-//FACTORY RESTORE                           //deviation from original code: adds abort ability within 30 seconds (press button), resets all new LCDSETTINGS that were saved as well.
+//FACTORY RESTORE                           //deviation from original code: adds abort ability within 30 seconds (press button), resets LCDSETTINGS/GLOBALSETTINGS (and slots if option is enabled)
 
 
 ///////////////////////////////////////////////////////////////////////////////MENU////////////////////////////////////////////////////////////////////
