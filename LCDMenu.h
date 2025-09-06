@@ -27,8 +27,11 @@
 
 #define SIGNAL_SCROLL_SPEED    5000    //control the speed of the scrolling text in SIGNAL mode. displays Resolution for x_amount_of_time, scrolls, then displays SLOT NAME for x_amount_of_time
                                        // 1000  = 1 second,
-                                       // 10000 = 10 SECONDS                                    
+                                       // 10000 = 10 SECONDS 
 
+#define SIGNAL_DISPLAY_ONLY_SLOTNAME 0 //only display current loaded slot name on TOP line, NO scrolling text or resolution displayed.
+                                       // 0 = disabled                                                                        
+                                       // 1 = enabled
 
 //if you want to make your own screensaver splash go to " void LCD_printSplash(int logo_select) " in the LCDMenu.cpp file.
 //and use the link listed there to generate your own splash screen to use with this! just replace whats there and add nothing more. 

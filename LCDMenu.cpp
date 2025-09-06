@@ -644,8 +644,13 @@ if (LCD_menuItem == 2 && LCD_selectOption == 2)
 
                  
 
-                 
-LCD_scrollResolutionAndSlot(resText, slotName);
+if(SIGNAL_DISPLAY_ONLY_SLOTNAME != 1) { LCD_scrollResolutionAndSlot(resText, slotName); }       
+else {
+  lcd.clear(); 
+  lcd.setCursor(0, 0);
+  lcd.print(slotName + "             ");
+   }        
+
 
     // Line 2: Input Type + Hz + Sync 
     lcd.setCursor(0, 1);
@@ -1930,9 +1935,9 @@ void LCD_scrollResolutionAndSlot(const String &resolution, const String &slotNam
     }
 
     if (phase == 0) { 
-        // Hold resolution (top line)
+        // Hold slotname (top line)
         lcd.setCursor(0, 0);
-        lcd.print(pad(resolution));
+        lcd.print(pad(slotName));
         // Clear and pad bottom line with spaces to avoid leftover text
         lcd.setCursor(0, 1);
         lcd.print(pad("")); 
@@ -1944,26 +1949,26 @@ void LCD_scrollResolutionAndSlot(const String &resolution, const String &slotNam
         }
     }
     else if (phase == 1) {
-        // Scroll from resolution to slot (top line)
+        // Scroll from slot to resolution (top line)
         if (millis() - scrollTimer >= scrollInterval) {
             scrollTimer = millis();
-            String displayText = resolution + "   " + slotName;
+            String displayText = slotName + "   " + resolution;
             lcd.setCursor(0, 0);
             lcd.print(pad(displayText.substring(scrollStep, scrollStep + LCD_COLS)));
             // Clear and pad bottom line again
             lcd.setCursor(0, 1);
             lcd.print(pad(""));
             scrollStep++;
-            if (scrollStep > resolution.length()) {
+            if (scrollStep > slotName.length()) {
                 phase = 2;
                 phaseTimer = millis();
             }
         }
     }
     else if (phase == 2) {
-        // Hold slot name (top line)
+        // Hold resolution  (top line)
         lcd.setCursor(0, 0);
-        lcd.print(pad(slotName));
+        lcd.print(pad(resolution));
         // Clear and pad bottom line
         lcd.setCursor(0, 1);
         lcd.print(pad(""));
@@ -1975,10 +1980,10 @@ void LCD_scrollResolutionAndSlot(const String &resolution, const String &slotNam
         }
     }
     else if (phase == 3) {
-        // Scroll from slot back to resolution (top line)
+        // Scroll from resolution back to slot  (top line)
         if (millis() - scrollTimer >= scrollInterval) {
             scrollTimer = millis();
-            String displayText = slotName + "   " + resolution;
+            String displayText = resolution + "   " + slotName;
             lcd.setCursor(0, 0);
             lcd.print(pad(displayText.substring(scrollStep, scrollStep + LCD_COLS)));
             // Clear and pad bottom line
@@ -1986,7 +1991,7 @@ void LCD_scrollResolutionAndSlot(const String &resolution, const String &slotNam
             lcd.print(pad(""));
 
             scrollStep++;
-            if (scrollStep > slotName.length()) {
+            if (scrollStep > resolution.length()) {
                 phase = 0;
                 phaseTimer = millis();
             }
@@ -2112,7 +2117,7 @@ void LCD_USER_FilterSET()
        else if (strcmp(ScanlinesOptions[LCD_encoder_pos], "40%" ) == 0)   {  uopt->wantScanlines = true;  uopt->scanlineStrength = 0x40;     saveUserPrefs();    break;}
        else if (strcmp(ScanlinesOptions[LCD_encoder_pos], "50%" ) == 0)   {  uopt->wantScanlines = true;  uopt->scanlineStrength = 0x50;     saveUserPrefs();    break;}
      
-      //break;  //think I need to save each to slotsobject also
+      //break;           
     }
 
 
@@ -2260,13 +2265,11 @@ void LCD_USER_FilterSET()
    }
 }
 
-    
+
 
     if (currentSlotIndex >= 0 && currentSlotIndex < SLOTS_TOTAL) {
           LCDslotsObject.slot[currentSlotIndex].scanlines         = uopt->wantScanlines;
           LCDslotsObject.slot[currentSlotIndex].scanlinesStrength = uopt->scanlineStrength;
-
-        //new
           LCDslotsObject.slot[currentSlotIndex].wantVdsLineFilter = uopt->wantVdsLineFilter;
           LCDslotsObject.slot[currentSlotIndex].wantStepResponse  = uopt->wantStepResponse;
           LCDslotsObject.slot[currentSlotIndex].wantPeaking       = uopt->wantPeaking;
