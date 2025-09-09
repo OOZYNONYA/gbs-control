@@ -5,6 +5,12 @@
 
 
 /////////////////////////////////////////////////////////MANUAL SETTINGS/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#define NO_ENCODER_MODE        0       // useful for people with no rotary dial to see what resolution/signal/slot they are currently working with (instantly updates when loading preset using webapp/turning power off of console  (if realtime updating is enabled))
+                                       // 0 = NO ENCODER MODE SET TO OFF
+                                       // 1 = NO ENCODER MODE SET TO ON
+                                       // 2 = NO ENCODER MODE SET TO ON AND LCD BACKLIGHT WILL BE TURNED OFF
+                                       // X = (NOT IMPLEMENTED) Turn on backlight for 10 seconds every time a new signal is found, or lost      
+
 #define USE_REALTIME_UPDATING  1       // 1 = when you make or change a preset name your changes will instantly appear in the menu    
                                        // 0 = you will need to restart the GBS to see changes with saved slot names and such. 
 
@@ -13,11 +19,6 @@
                                        // 1 = reset to main menu        from resolutions/presets/ after selecting an option
                                        // USE CASE EXAMPLE: if you are loading directly into PRESETS SUBMENU and never want to leave until you press BACK so you can continue to load presets uninterrupted.
 
-#define NO_ENCODER_MODE        0       // useful for people with no rotary dial to see what resolution/signal/slot they are currently working with (instantly updates when loading preset using webapp/turning power off of console  (if realtime updating is enabled))
-                                       // 0 = NO ENCODER MODE SET TO OFF
-                                       // 1 = NO ENCODER MODE SET TO ON
-                                       // 2 = NO ENCODER MODE SET TO ON AND LCD BACKLIGHT WILL BE TURNED OFF
-                                       // X = (NOT IMPLEMENTED) Turn on backlight for 10 seconds every time a new signal is found, or lost      
 
                                        //WARNING: do not enable without backing up your current slots file in the web application                                  
 #define FACTORY_RESET_ALL      0       //if enabled: all saved PRESET SLOTS will be deleted with "FACTORY RESET" of system. by default: factory reset just resets global settings,LCD settings,filter settings
@@ -29,18 +30,25 @@
                                        // 1000  = 1 second,
                                        // 10000 = 10 SECONDS 
 
-#define SIGNAL_DISPLAY_ONLY_SLOTNAME 0 //only display current loaded slot name on TOP line, NO scrolling text or resolution displayed.
+#define SIGNAL_DISPLAY_ONLY_SLOTNAME 0 //only display current loaded SLOT NAME on TOP line of SIGNAL, NO scrolling text or resolution displayed.
                                        // 0 = disabled                                                                        
                                        // 1 = enabled
 
 //if you want to make your own screensaver splash go to " void LCD_printSplash(int logo_select) " in the LCDMenu.cpp file.
 //and use the link listed there to generate your own splash screen to use with this! just replace whats there and add nothing more. 
 //or just make your own custom version however you want with lcd.print("example");
-#define LCD_SPLASH_SCREEN_TYPE 2       // 0 = add in your own custom text in LCDmenu.cpp LCD_printSplash() function (located in LCDMenu.cpp)
+#define LCD_SPLASH_SCREEN_TYPE 1       // 0 = add in your own custom text in LCDmenu.cpp LCD_printSplash() function (located in LCDMenu.cpp)
                                        // 1 = display ANIMATED "GBS[C]" splashscreen
                                        // 2 = display NON-animated "GBS[C]" splashscreen
-                                    
 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//EXPERIMENTAL/TESTING: 
+#define SAVE_RESOLUTION_PER_SLOT  0       //currently LCD_MENU >RESOLUTIONS only loads a resolution temporarily, with this enabled, it will save resolution and load resolution PER SLOT but with some caveats:                                
+                                          //gbsc must already be connected to any powered signal before saving new resolution to file,
+                                          // it also will not update in WEB APPLICATION what current saved resolution is under preset slot name (will just say last saved resolution/"custom")
+                                          // 0 = disabled
+                                          // 1 = enabled         
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -58,8 +66,8 @@
 
 
 //Screensaver options menu                   (meant to work only inside of mainmenu/resolutions/presets/signal/)
-//SCREENSAVER  "NONE"                     // No screensavers will be used and all screensaver settings reset to 0
-//USE_SPLASH_SCREENSAVER                  // when this screensaver is enabled, a splash screen will display on the LCD and halt main menu loop while user inactive on menu 
+//SCREENSAVER  "NONE"                     // No screensavers will be used and all screensaver settings reset to 0 
+//USE_SPLASH_SCREENSAVER                  // when this screensaver is enabled, a splash screen will display on the LCD and halt main menu loop while user inactive on menu  //current disabled in SIGNAL because the whole point of signal is to see a live feed of current loaded signal
 //USE_SIGNAL_SCREENSAVER                  // when this screensaver is enabled, the SIGNAL category will be loaded on screen and have realtime updating (if enabled) until you wake it up, at which point you will resume your current state. 
 //USE_LCD_TURNOFF_SCREENSAVER             // when this screensaver is enabled, the backlight of your LCD will turn off and halt main menu loop while user inactive on menu 
                                           // its possible to select both NO BACKLIGHT SCREENSAVER AND ANY OTHER SCREEN SAVER; it will turn off LCD backlight and display screen in the dark and halt menu

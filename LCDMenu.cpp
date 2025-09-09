@@ -257,6 +257,7 @@ void LCD_USER_MAIN_MENU()
             } else {
                 applyPresets(videoMode);
             }
+            if(SAVE_RESOLUTION_PER_SLOT == 1) {        savePresetToSPIFFS();          uopt->presetPreference = OutputCustomized;}            
             saveUserPrefs();
             delay(1000); //catchup
             if(RESET_TO_MAIN_MENU == 1) {LCD_resetToXMenu(RETURN_TO_MAIN);}    //reset back into main starting menu
@@ -283,6 +284,7 @@ void LCD_USER_MAIN_MENU()
             } else {
                 applyPresets(videoMode);
             }
+            if(SAVE_RESOLUTION_PER_SLOT == 1) {        savePresetToSPIFFS();          uopt->presetPreference = OutputCustomized;}           
             saveUserPrefs();
             delay(1000); //catchup
             if(RESET_TO_MAIN_MENU == 1) {LCD_resetToXMenu(RETURN_TO_MAIN);}
@@ -307,6 +309,7 @@ void LCD_USER_MAIN_MENU()
             } else {
                 applyPresets(videoMode);
             }
+            if(SAVE_RESOLUTION_PER_SLOT == 1) {        savePresetToSPIFFS();          uopt->presetPreference = OutputCustomized;}       
             saveUserPrefs();
             delay(1000); //catchup
             if(RESET_TO_MAIN_MENU == 1) {LCD_resetToXMenu(RETURN_TO_MAIN);}
@@ -331,6 +334,7 @@ void LCD_USER_MAIN_MENU()
             } else {
                 applyPresets(videoMode);
             }
+            if(SAVE_RESOLUTION_PER_SLOT == 1) {        savePresetToSPIFFS();          uopt->presetPreference = OutputCustomized;}   
             saveUserPrefs();
             delay(1000); //catchup
             if(RESET_TO_MAIN_MENU == 1) {LCD_resetToXMenu(RETURN_TO_MAIN);}
@@ -355,6 +359,7 @@ void LCD_USER_MAIN_MENU()
             } else {
                 applyPresets(videoMode);
             }
+            if(SAVE_RESOLUTION_PER_SLOT == 1) {        savePresetToSPIFFS();          uopt->presetPreference = OutputCustomized;}          
             saveUserPrefs();
             delay(1000); //catchup
             if(RESET_TO_MAIN_MENU == 1) {LCD_resetToXMenu(RETURN_TO_MAIN);}
@@ -379,6 +384,7 @@ void LCD_USER_MAIN_MENU()
             } else {
                 applyPresets(videoMode);
             }
+            if(SAVE_RESOLUTION_PER_SLOT == 1) {        savePresetToSPIFFS();          uopt->presetPreference = OutputCustomized;}  
             saveUserPrefs();
             delay(1000); //catchup
             if(RESET_TO_MAIN_MENU == 1) {LCD_resetToXMenu(RETURN_TO_MAIN);}
@@ -406,6 +412,7 @@ void LCD_USER_MAIN_MENU()
             } else {
                 rto->applyPresetDoneStage = 1;
             }
+            if(SAVE_RESOLUTION_PER_SLOT == 1) {        savePresetToSPIFFS();          uopt->presetPreference = OutputCustomized;}  
             saveUserPrefs();
             delay(1000); //catchup
             if(RESET_TO_MAIN_MENU == 1) {LCD_resetToXMenu(RETURN_TO_MAIN);}
@@ -1744,6 +1751,8 @@ void LCD_USER_LCDSET()
   
    LCD_encoder_pos = 0;
    LCD_resetToXMenu(RETURN_TO_OPTIONS);
+   //LCD_main_pointer = 30 ; //cursor back on LCD settings when we return to options
+   //LCD_pointer_count = 2 ; //cursor back on LCD settings when we return to options
  
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -3021,6 +3030,7 @@ else if(global_selection == 10){
     if(global_selection != 0) //if we press back don't say saved.
     {
 
+
    ////////////////////////////////////////////////////////////////////////
    //apply video settings instantly
           uint8_t videoMode = getVideoMode();
@@ -3043,8 +3053,14 @@ else if(global_selection == 10){
     lastActivityTime = millis();
     ////////////////////////////////////////////////////////////////////////////////
 
-
-
+    //////////////////////////////////////////////////////////////////////////////////
+    LCD_resetToXMenu(RETURN_TO_OPTIONS); 
+   // LCD_main_pointer = 15; //cursor back on GLOBAL SETTINGS when returning to to options
+   // LCD_pointer_count = 1; //cursor back on GLOBAL SETTINGS when returning to to options
+    //would prefer this not be here and user resets back inside global settings, but we are loop captured and main gbscontrol loop cannot apply proper settings until we press BACK.
+    //Example: if you have scanline filter on, and select a global option, it turns them visually off until you press BACK in globalsettings.
+    //this is not ideal for the end user who has no idea why their filters just turned off, so better to just have it be annoying and return to OPTIONS menu
+    //////////////////////////////////////////////////////////////////////////////////
 
 }
 
