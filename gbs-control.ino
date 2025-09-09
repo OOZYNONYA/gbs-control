@@ -7877,7 +7877,6 @@ void loop()
   if (USE_REALTIME_UPDATING == 1)                 {LCD_Load_PresetIDs_Into_slotobject(); }  //LCD instantly load preset slot names into variable to access when needed  //its looped which might be costly
   if (USE_SCREENSAVER == 1)                       {LCD_screenSaver();} //LCDs screensaver function checks for inactivity
  
-
    switch (currentMenu)
     {
         case MAIN_MENU:             if (HALT_LCD_MENU == false)       { LCD_USER_MAIN_MENU();     } break; 

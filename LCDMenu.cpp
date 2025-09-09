@@ -45,9 +45,9 @@ GlobalSlotOptions globalOptions[MAX_SLOTS]; //contains all GLOBAL_SETTINGS_PER_U
 
 //LCD menu navigation strings//////////////////////////////////////////////////////////
 String LCD_menu[4] =        {"RESOLUTION", "PRESET", "OPTION", "SIGNAL"};
-String LCD_Resolutions[7] = {"1280x960", "1280x1024", "1280x720", "1920x1080", "480/576", "DOWNSCALE", "PASS-THROUGH"}; 
+String LCD_Resolutions[7] = {"1280x960", "1280x1024", "1280x720", "1920x1080", "480/576", "DOWNSCALE", "BYPASS"}; 
 //String LCD_Presets[8] =   {"1", "2", "3", "4", "5", "6", "7", "BACK"}; //no longer in use, we display actual preset names
-String LCD_Option[8] =      {"FILTER SETTINGS","GLOBAL SETTINGS","LCD SETTINGS","CREATE SLOT","REMOVE SLOT","RESET GBS", "FACTORY RESET", "BACK"}; 
+String LCD_Option[8] =      {"FILTER SETTINGS","GLOBAL SETTINGS","LCD SETTINGS","CREATE SLOT","REMOVE SLOT","RESET GBS","FACTORY RESET", "BACK"}; 
 //////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -396,7 +396,7 @@ void LCD_USER_MAIN_MENU()
            
         lcd.clear();
         lcd.setCursor(0,0); 
-        lcd.print("PASSTHROUGH");  
+        lcd.print("BYPASS");  
         lcd.setCursor(0,1); 
         lcd.print("LOADED!");  
        
@@ -840,54 +840,59 @@ void apply_GLOBAL_PER_SLOT(int slotIndex) {
 }
 
 
-
-
-String printSlotNameToLCD(int index) //index = current lcd_pointer_count
+String printSlotNameToLCD(int index) // index = current lcd_pointer_count
 {
-               delay(LCD_REFRESHRATE);
-               static int last_known_saved_slot;
+    delay(LCD_REFRESHRATE);
+    static int last_known_saved_slot = 0;
+    static int prevEncoderPos = 0;
 
+    if (index < 0) { index = 0; }
+    if (index > SLOTS_TOTAL) { index = SLOTS_TOTAL; }
+    
+    /////////////////////////////////////////////////////// 
+    //fix for needing several rotary rotations to get off first slot
+        // Only react when encoder actually moved
+        if (LCD_encoder_pos != prevEncoderPos) {
+            prevEncoderPos = LCD_encoder_pos;}
 
-                  if (index < 0) {index = 0;}
-                  if (index > SLOTS_TOTAL) {index = SLOTS_TOTAL;}
-               
+       if (LCD_pointer_count < 0) { LCD_pointer_count = 0; }
+   /////////////////////////////////////////////////////// 
 
-                lcd.clear();
-                lcd.setCursor(0,0);
-                lcd.print("PRESET SLOT: ");
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("PRESET SLOT: ");
 
-                int current_index = index; //current lcd_pointer_count sent to function
-                String valueOfEmptySlotID = "Empty                   " ;  //value stored in bin for empty slots
-       
-                //slot is *NOT* empty or uninitialized
-                if (String(LCDslotsObject.slot[current_index].name) != valueOfEmptySlotID && String(LCDslotsObject.slot[current_index].name) != "")
-                {
-                  last_known_saved_slot = current_index;
+    int current_index = index; 
+    String valueOfEmptySlotID = "Empty                   ";
 
-                  delay(10);
-                  lcd.setCursor(0,1);
-                  lcd.print(String(LCDslotsObject.slot[current_index].name));
-                  return String(LCDslotsObject.slot[current_index].name);
-               
-                } 
-                else //slot is empty or uninitialized //BACK
-                {
-                         if (digitalRead(LCD_pin_clk) == LOW) {
-                         delay(10);
-                         if (digitalRead(LCD_pin_data) == HIGH) LCD_encoder_pos++;
-                         else LCD_encoder_pos--;
-                         }
+    //slot is *NOT* empty or uninitialized
+    if (String(LCDslotsObject.slot[current_index].name) != valueOfEmptySlotID && String(LCDslotsObject.slot[current_index].name) != "")
+    {
+        last_known_saved_slot = current_index;
+        lcd.setCursor(0, 1);
+        lcd.print(String(LCDslotsObject.slot[current_index].name));
+        return String(LCDslotsObject.slot[current_index].name);
 
+     
+    } 
+    else // slot is empty or uninitialized then keep user on "BACK"
+    {
+           // Only react when encoder actually moved //debounce 
+            if (LCD_encoder_pos != prevEncoderPos) {
+            prevEncoderPos = LCD_encoder_pos;}
 
-                        // delay(10); 
-                        lcd.setCursor(0,1);
-                        lcd.print("BACK");
-                        LCD_pointer_count = (last_known_saved_slot + 1); // block user from going into the vast void of 72 empty slots by keeping pointer on first non-saved-slot
-                        return ("BACK");
-                }
-               
-
+            // block user from going into the vast void of 72 empty slots by keeping pointer on first non-saved-slot
+            if (LCD_pointer_count > last_known_saved_slot + 1)
+             {
+                LCD_pointer_count = last_known_saved_slot + 1; 
+             }
+        
+        lcd.setCursor(0, 1);
+        lcd.print("BACK");
+        return "BACK";
+    }
 }
+
 
 
 

@@ -26,7 +26,7 @@
                                        // 1 = enabled
 
 
-#define SIGNAL_SCROLL_SPEED    5000    //control the speed of the scrolling text in SIGNAL mode. displays Resolution for x_amount_of_time, scrolls, then displays SLOT NAME for x_amount_of_time
+#define SIGNAL_SCROLL_SPEED    5000    //control the speed of the scrolling text in SIGNAL mode. displays slotname for x_amount_of_time, scrolls, then displays resolution for x_amount_of_time
                                        // 1000  = 1 second,
                                        // 10000 = 10 SECONDS 
 
@@ -44,7 +44,7 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //EXPERIMENTAL/TESTING: 
-#define SAVE_RESOLUTION_PER_SLOT  0       //currently LCD_MENU >RESOLUTIONS only loads a resolution temporarily, with this enabled, it will save resolution and load resolution PER SLOT but with some caveats:                                
+#define SAVE_RESOLUTION_PER_SLOT  0       //currently LCDMENU >RESOLUTIONS only loads a resolution temporarily, with this enabled, it will save resolution and load resolution PER SLOT but with some caveats:                                
                                           //gbsc must already be connected to any powered signal before saving new resolution to file,
                                           // it also will not update in WEB APPLICATION what current saved resolution is under preset slot name (will just say last saved resolution/"custom")
                                           // 0 = disabled
