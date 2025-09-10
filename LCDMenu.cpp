@@ -1320,7 +1320,7 @@ void enterScreenSaver() //LCD SCREENSAVER
       if(USE_TURNOFF_LCD_SCREENSAVER == 1) 
       {
                                        
-       if (USE_SIGNAL_SCREENSAVER != 1) {HALT_LCD_MENU = true;} //dont halt if SIGNAL screensaver is on
+       //if (USE_SIGNAL_SCREENSAVER != 1) {HALT_LCD_MENU = true;} //dont halt if SIGNAL screensaver is on
        //lcd.noDisplay();   //uncomment this to turn off all text as well //wrap it in if statement and make global variable to handle it by user choice
        lcd.noBacklight(); // turn off just backlight (text still appears)
       }
