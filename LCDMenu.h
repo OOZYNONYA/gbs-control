@@ -17,7 +17,7 @@
                                             
 #define RESET_TO_MAIN_MENU     1       // 0 = do not reset to main menu from resolutions/presets/ after selecting an option  (stay inside menu after until back is selected)
                                        // 1 = reset to main menu        from resolutions/presets/ after selecting an option
-                                       // USE CASE EXAMPLE: if you are loading directly into PRESETS SUBMENU and never want to leave until you press BACK so you can continue to load presets uninterrupted.
+                                       // USE CASE EXAMPLE: if you want to continuously cycle through resolutions/presets without having to manually re-enter the menu every single time.
 
 
                                        //WARNING: do not enable without backing up your current slots file in the web application                                  

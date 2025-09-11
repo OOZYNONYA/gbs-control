@@ -46,22 +46,22 @@ GlobalSlotOptions globalOptions[MAX_SLOTS]; //contains all GLOBAL_SETTINGS_PER_U
 //LCD menu navigation strings//////////////////////////////////////////////////////////
 String LCD_menu[4] =        {"RESOLUTION", "PRESET", "OPTION", "SIGNAL"};
 String LCD_Resolutions[7] = {"1280x960", "1280x1024", "1280x720", "1920x1080", "480/576", "DOWNSCALE", "BYPASS"}; 
-//String LCD_Presets[8] =   {"1", "2", "3", "4", "5", "6", "7", "BACK"}; //no longer in use, we display actual preset names
+//String LCD_Presets[8] =   {"1", "2", "3", "4", "5", "6", "7", "BACK"}; //no longer in use, we display actual preset names and are no longer limited to 7
 String LCD_Option[8] =      {"FILTER SETTINGS","GLOBAL SETTINGS","LCD SETTINGS","CREATE SLOT","REMOVE SLOT","RESET GBS","FACTORY RESET", "BACK"}; 
 //////////////////////////////////////////////////////////////////////////////////////
 
 
 ////////////ENCODER AND MENU RELATED VARIABLES///////////////////////////////////////////
 //default values
-int LCD_menuItem     = 1;           //default is 1 (displays main menu)
-int LCD_subsetFrame  = 0;           //0 default
-int LCD_selectOption = 0;           //0 default
-int LCD_page         = 0;           //0 default
+int LCD_menuItem     = 1;             //default is 1 (displays main menu)
+int LCD_subsetFrame  = 0;             //0 default
+int LCD_selectOption = 0;             //0 default
+int LCD_page         = 0;             //0 default
 //default values
 int LCD_lastCount              = 0;
 volatile int LCD_encoder_pos   = 0;   //0 default
-volatile int LCD_main_pointer  = 0;  //0 default // volatile vars change done with ISR
-volatile int LCD_pointer_count = 0; //0 default
+volatile int LCD_main_pointer  = 0;   //0 default // volatile vars change done with ISR
+volatile int LCD_pointer_count = 0;   //0 default
 volatile int LCD_sub_pointer   = 0;   //0 default
 ////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -78,14 +78,12 @@ int     SAVESTATE_sub_pointer       = 0;
 LCDMenuState SAVESTATE_currentMenu;
 /////////////////////////////////////////////////////////////////////////
 
-
-
-//enum variable that handles being in main LCD menu or OPTIONS menu to clean variables up/////
+//enum member that handles which menu is being looped/////
 LCDMenuState currentMenu = MAIN_MENU;
-//////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
 
 
-//LCD screen saver variables//////////////////////////////////////////////////////////
+//LCD  SCREENSAVER VARIABLES //////////////////////////////////////////////////////////
 bool screenSaverActive = false; //lcd screensaver
 //unsigned long lastActivityTime = 0;
 unsigned long lastActivityTime = millis();
@@ -95,8 +93,8 @@ bool HALT_LCD_MENU = false;
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-const int LCD_pin_clk    = 14;            //D5 = GPIO14 (input of one direction for encoder)
-const int LCD_pin_data   = 13;           //D7 = GPIO13	(input of one direction for encoder)
+const int LCD_pin_clk    = 14;         //D5 = GPIO14 (input of one direction for encoder)
+const int LCD_pin_data   = 13;         //D7 = GPIO13	(input of one direction for encoder)
 const int LCD_pin_switch = 0;          //D3 = GPIO0 pulled HIGH, else boot fail (middle push button for encoder)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -474,6 +472,7 @@ if (LCD_menuItem == 2 && LCD_selectOption == 2)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Option selection //LCD
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//currently all menus are called and looped in gbs-control.ino, only menu state is changed here
 
 //FILTER SETTINGS MENU//////////////////////////////////////////
     if (LCD_menuItem == 3) {
@@ -1003,8 +1002,10 @@ if (logo_select == 0){
   //lcd.clear();
   //lcd.setCursor(0,0);
   //lcd.print("SPLASHSCREEN TEXT");
-  //change LCD_SPLASH_SCREEN_TYPE  to 0 in LCDmenu.h
   //or make one with custom characters:  //https://chareditor.com/
+
+  //change LCD_SPLASH_SCREEN_TYPE  to 0 in LCDmenu.h
+
 }
 
 else if (logo_select == 1) //animated GBS[C] logo
@@ -1311,21 +1312,22 @@ void LCD_Load_PresetIDs_Into_slotobject()
 
 void enterScreenSaver() //LCD SCREENSAVER
  {
-   //possible to use both screensavers at once! (this is intended)
+   
     if (USE_SCREENSAVER != 0)
     {
      screenSaverActive = true;
 
-
+//////////////LCD LIGHT OFF SCREENSAVER/////////////////////////////////////////////////////////
+//this screensaver can be used in combination with any other screensaver
       if(USE_TURNOFF_LCD_SCREENSAVER == 1) 
       {
                                        
-       //if (USE_SIGNAL_SCREENSAVER != 1) {HALT_LCD_MENU = true;} //dont halt if SIGNAL screensaver is on
-       //lcd.noDisplay();   //uncomment this to turn off all text as well //wrap it in if statement and make global variable to handle it by user choice
+     
+       //lcd.noDisplay();   //uncomment this to turn off all lcd text as well 
        lcd.noBacklight(); // turn off just backlight (text still appears)
       }
-
-     if (USE_SPLASH_SCREENSAVER == 1)
+//////////////SPLASHSCREEN SCREENSAVER/////////////////////////////////////////////////////////
+     if (USE_SPLASH_SCREENSAVER == 1) 
       {  
        if (USE_TURNOFF_LCD_SCREENSAVER == 1) {lcd.noBacklight();}
        //halt main menu loop so its not constantly running when user is not using menu system
@@ -1333,8 +1335,8 @@ void enterScreenSaver() //LCD SCREENSAVER
        lcd.clear();
        LCD_printSplash(LCD_SPLASH_SCREEN_TYPE); 
       }
-
-      if (USE_SIGNAL_SCREENSAVER == 1)
+//////////////SIGNAL SCREENSAVER/////////////////////////////////////////////////////////
+      if (USE_SIGNAL_SCREENSAVER == 1)   //////////////SIGNAL SCREENSAVER
       {
         lcd.clear(); 
 
@@ -1570,7 +1572,7 @@ void LCD_USER_LCDSET()
       if (digitalRead(LCD_pin_switch) == LOW) {
       while (digitalRead(LCD_pin_switch) == LOW) { delay(10); }
 
-           if (strcmp(screenSaverOptions[LCD_encoder_pos], "BACK") == 0)                   {  lcd_selection == 0;                                                                                                               lastActivityTime = millis();           return;}
+           if (strcmp(screenSaverOptions[LCD_encoder_pos], "BACK") == 0)                   {  lcd_selection =   0;                                                                                                              lastActivityTime = millis();           return;}
       else if (strcmp(screenSaverOptions[LCD_encoder_pos], "NONE" ) == 0)                  {  USE_SCREENSAVER = 0;      USE_SPLASH_SCREENSAVER      = 0;    USE_TURNOFF_LCD_SCREENSAVER = 0;   USE_SIGNAL_SCREENSAVER = 0;      saveLCDSettingsFile();    delay(100);  break;}
       else if (strcmp(screenSaverOptions[LCD_encoder_pos], "SPLASHSCREEN"  ) == 0)         {  USE_SCREENSAVER = 1;      USE_SPLASH_SCREENSAVER      = 1;    USE_SIGNAL_SCREENSAVER      = 0;                                    saveLCDSettingsFile();    delay(100);  break;}
       else if (strcmp(screenSaverOptions[LCD_encoder_pos], "BACKLIGHTOFF" ) == 0)          {  USE_SCREENSAVER = 1;      USE_TURNOFF_LCD_SCREENSAVER = 1;                                                                        saveLCDSettingsFile();    delay(100);  break;}
@@ -1621,7 +1623,7 @@ void LCD_USER_LCDSET()
       if (digitalRead(LCD_pin_switch) == LOW) {
       while (digitalRead(LCD_pin_switch) == LOW) { delay(10); }
 
-      if      (strcmp(refreshRateOptions[LCD_encoder_pos], "BACK") == 0)   {  lcd_selection ==  0;   lastActivityTime = millis();                                       return;}
+      if      (strcmp(refreshRateOptions[LCD_encoder_pos], "BACK") == 0)   {  lcd_selection =  0;    lastActivityTime = millis();                                       return;}
       else if (strcmp(refreshRateOptions[LCD_encoder_pos], "100" ) == 0)   {  LCD_REFRESHRATE = 100; saveLCDSettingsFile();                                 delay(100);  break;}
       else if (strcmp(refreshRateOptions[LCD_encoder_pos], "200" ) == 0)   {  LCD_REFRESHRATE = 200; saveLCDSettingsFile();                                 delay(100);  break;}
       else if (strcmp(refreshRateOptions[LCD_encoder_pos], "300" ) == 0)   {  LCD_REFRESHRATE = 300; saveLCDSettingsFile();                                 delay(100);  break;}
@@ -1669,7 +1671,7 @@ void LCD_USER_LCDSET()
       if (digitalRead(LCD_pin_switch) == LOW) {
       while (digitalRead(LCD_pin_switch) == LOW) { delay(10); }
 
-           if (strcmp(subMenuOptions[LCD_encoder_pos],"BACK") == 0)           { lcd_selection == 0;              lastActivityTime = millis();                                                                                     return;}
+           if (strcmp(subMenuOptions[LCD_encoder_pos], "BACK") == 0)          { lcd_selection = 0;               lastActivityTime = millis();                                                                                     return;}
       else if (strcmp(subMenuOptions[LCD_encoder_pos], "MAIN" ) == 0)         { LOAD_DIRECTLY_INTO_SUB_MENU = 0; CURSOR_ON_MENU_AT_STARTUP = 0; saveLCDSettingsFile();                                                delay(100);  break;}
       else if (strcmp(subMenuOptions[LCD_encoder_pos], "RESOLUTIONS"  ) == 0) { LOAD_DIRECTLY_INTO_SUB_MENU = 1; CURSOR_ON_MENU_AT_STARTUP = 0; saveLCDSettingsFile();                                                delay(100);  break;}
       else if (strcmp(subMenuOptions[LCD_encoder_pos], "PRESETS" ) == 0)      { LOAD_DIRECTLY_INTO_SUB_MENU = 2; CURSOR_ON_MENU_AT_STARTUP = 0; saveLCDSettingsFile();                                                delay(100);  break;}
@@ -1721,7 +1723,7 @@ void LCD_USER_LCDSET()
       if (digitalRead(LCD_pin_switch) == LOW) {
       while (digitalRead(LCD_pin_switch) == LOW) { delay(10); }
 
-           if (strcmp( cursorMenuOptions[LCD_encoder_pos], "BACK") == 0)          { lcd_selection == 0;            lastActivityTime = millis();                                                                         return;}
+           if (strcmp( cursorMenuOptions[LCD_encoder_pos], "BACK") == 0)          { lcd_selection = 0;             lastActivityTime = millis();                                                                         return;}
       else if (strcmp( cursorMenuOptions[LCD_encoder_pos], "MAIN" ) == 0)         { CURSOR_ON_MENU_AT_STARTUP = 0; LOAD_DIRECTLY_INTO_SUB_MENU = 0; saveLCDSettingsFile();                                  delay(100);  break;}
       else if (strcmp( cursorMenuOptions[LCD_encoder_pos], "RESOLUTIONS"  ) == 0) { CURSOR_ON_MENU_AT_STARTUP = 1; LOAD_DIRECTLY_INTO_SUB_MENU = 0; saveLCDSettingsFile();                                  delay(100);  break;}
       else if (strcmp( cursorMenuOptions[LCD_encoder_pos], "PRESETS" ) == 0)      { CURSOR_ON_MENU_AT_STARTUP = 2; LOAD_DIRECTLY_INTO_SUB_MENU = 0; saveLCDSettingsFile();                                  delay(100);  break;}
@@ -3060,11 +3062,12 @@ else if(global_selection == 10){
 
     //////////////////////////////////////////////////////////////////////////////////
     LCD_resetToXMenu(RETURN_TO_OPTIONS); 
-   // LCD_main_pointer = 15; //cursor back on GLOBAL SETTINGS when returning to to options
-   // LCD_pointer_count = 1; //cursor back on GLOBAL SETTINGS when returning to to options
     //would prefer this not be here and user resets back inside global settings, but we are loop captured and main gbscontrol loop cannot apply proper settings until we press BACK.
     //Example: if you have scanline filter on, and select a global option, it turns them visually off until you press BACK in globalsettings.
     //this is not ideal for the end user who has no idea why their filters just turned off, so better to just have it be annoying and return to OPTIONS menu
+
+   // LCD_main_pointer = 15; //cursor back on GLOBAL SETTINGS when returning to to options
+   // LCD_pointer_count = 1; //cursor back on GLOBAL SETTINGS when returning to to options
     //////////////////////////////////////////////////////////////////////////////////
 
 }
@@ -3367,7 +3370,7 @@ void LCD_USER_removeSlot() {
       return;
     }
 
-    delay(50); // lightweight loop delay
+    delay(50); 
   }
 }
 
