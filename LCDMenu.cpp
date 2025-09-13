@@ -1,7 +1,7 @@
 #include <ESP8266WiFi.h>
 #include "options.h"
 #include "tv5725.h"
-#include "slot.h" //only here because of SLOTS_TOTAL, which we can make instead
+#include "slot.h" 
 #include "src/WebSockets.h"
 #include "src/WebSocketsServer.h"
 
@@ -114,6 +114,7 @@ int CURSOR_ON_MENU_AT_STARTUP   = 0;
 int SCREEN_TIMEOUT              = 60000; 
 int USE_SIGNAL_SCREENSAVER      = 0;
 int USE_GLOBALSET_PER_SLOT      = 0;
+int BYPASS_TEMPFIX              = 0;
 //ENCODER SELECTABLE OPTIONS/////////////////////////////
 
 
@@ -929,8 +930,8 @@ const char slotCharset[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcedefghijklmnopqrstuvwxy
         
             //LCD_subsetFrame = 3; 
             uopt->presetSlot =  slotCharset[index];  // we feed it the letter its looking for which correlates to the PRESET slot identifier a...b...c etc
-            uopt->presetPreference = OutputCustomized;
-            saveUserPrefs();
+            uopt->presetPreference = OutputCustomized; 
+            saveUserPrefs(); 
 
             /////////apply global_per_slot_settings///////////////////////////////////////
             int slotIndexApply = getCurrentSlotIndexFromPresetSlotChar(uopt->presetSlot);
@@ -957,6 +958,30 @@ const char slotCharset[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcedefghijklmnopqrstuvwxy
                   delay(300);
                  
           
+
+///////////////////////////////////////////BYPASS_TEMPFIX for bypass getting stuck for long periods on load and on switch off of bypass-preset/////////////////////////////////////////////////////
+//remove if we ever find a better solution
+          if(LCDslotsObject.slot[slotIndexApply].presetID == 0x21 || LCDslotsObject.slot[slotIndexApply].presetID == 0x22) //if loading bypass resolution using preset
+          {
+               uopt->presetPreference = OutputBypass;
+              // saveUserPrefs();
+               //uopt->presetPreference = OutputCustomized;
+
+             BYPASS_TEMPFIX = 1; //if last preset loaded was a bypass one, crude fix = 1;
+             saveLCDSettingsFile(); //save fix to file
+             delay(50);
+             ESP.reset(); //restart system
+            
+          }
+           else if (BYPASS_TEMPFIX == 1) //if user switches to non-bypass preset but its still stuck on passthrough/bypass, then restart to to remove the frozen state
+           {
+            BYPASS_TEMPFIX = 0; //now on next boot user can load any non-bypass preset slot and not have to reset each time unless they go back onto bypass.
+            saveLCDSettingsFile();
+            ESP.reset();
+           }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
            
             uopt->presetPreference = OutputCustomized;
             if (rto->videoStandardInput == 14) {
@@ -1301,7 +1326,6 @@ else if (CURSOR_ON_MENU_AT_STARTUP != 0)
 void LCD_Load_PresetIDs_Into_slotobject()
 {
     // initialize and load saved slot names into LCDslotsobject
-    // we do it here ONCE, looping it in main LCD loop crashes the system //place somewhere where it will not be looped
                 LCDslotsObject;
                 File slotsBinaryFileRead = SPIFFS.open(SLOTS_FILE, "r");
                 slotsBinaryFileRead.read((byte *)&LCDslotsObject, sizeof(LCDslotsObject));
@@ -1798,6 +1822,7 @@ void loadLCDSettingsFile() {
     SCREEN_TIMEOUT                = file.readStringUntil('\n').toInt();
     USE_SIGNAL_SCREENSAVER        = file.readStringUntil('\n').toInt();
     USE_GLOBALSET_PER_SLOT        = file.readStringUntil('\n').toInt();
+    BYPASS_TEMPFIX                = file.readStringUntil('\n').toInt();
 
     delay(50);
     file.close();
@@ -1822,8 +1847,9 @@ void saveLCDSettingsFile() {
     file.println(CURSOR_ON_MENU_AT_STARTUP);
     file.println(SCREEN_TIMEOUT);
     file.println(USE_SIGNAL_SCREENSAVER);
-    file.println(USE_GLOBALSET_PER_SLOT);
-     
+    file.println(USE_GLOBALSET_PER_SLOT); 
+    file.println(BYPASS_TEMPFIX);
+
     delay(50);
     file.close();
     delay(50);
@@ -1849,6 +1875,7 @@ void resetLCDSettingsToDefault() {
      CURSOR_ON_MENU_AT_STARTUP   = 0;
      SCREEN_TIMEOUT              = 60000;           //default 60000 (1MIN), 10 seconds is 10000
      USE_GLOBALSET_PER_SLOT      = 0;
+     BYPASS_TEMPFIX              = 0;
 
     // Save defaults to SPIFFS
     File file = SPIFFS.open("/LCD_settings.txt", "w");
@@ -1863,8 +1890,8 @@ void resetLCDSettingsToDefault() {
     file.println(CURSOR_ON_MENU_AT_STARTUP);
     file.println(SCREEN_TIMEOUT);
     file.println(USE_SIGNAL_SCREENSAVER);
-    file.println(USE_GLOBALSET_PER_SLOT);
-
+    file.println(USE_GLOBALSET_PER_SLOT);  
+    file.println(BYPASS_TEMPFIX);
 
         file.close();
     }
@@ -1899,6 +1926,7 @@ void createDefaultLCDSettingsFile() {
     file.println("60000");// SCREEN_TIMEOUT
     file.println("0");    // USE_SIGNAL_SCREENSAVER
     file.println("0");    // USE_GLOBALSET_PER_SLOT
+    file.println("0");    // BYPASS_TEMPFIX
 
     delay(100);
 
@@ -2884,7 +2912,7 @@ void LCD_USER_GlobalSET() {
           {
                     if  (strcmp(FrameTimeLockOptions[LCD_encoder_pos], "BACK") == 0) { global_selection = 0;                                         break;}
                else if (strcmp(FrameTimeLockOptions[LCD_encoder_pos], "OFF") == 0)
-          {
+              {
                    uopt->enableFrameTimeLock = 0;
                    int slotIndex = getCurrentSlotIndexFromPresetSlotChar(uopt->presetSlot); 
                    globalOptions[slotIndex].enableFrameTimeLock = 0; 
@@ -2892,7 +2920,7 @@ void LCD_USER_GlobalSET() {
                    delay(100); 
                  break;
 
-          }
+              }
                else if (strcmp(FrameTimeLockOptions[LCD_encoder_pos], "ON") == 0)
                {
                 uopt->enableFrameTimeLock = 1;
@@ -2962,7 +2990,7 @@ void LCD_USER_GlobalSET() {
                   delay(100); 
                   break;
 
-                 }
+                }
                else if (strcmp(deinterlaceOptions[LCD_encoder_pos], "BOB") == 0)
                {
                  uopt->deintMode = 1;

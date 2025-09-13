@@ -3,7 +3,6 @@
 
 
 
-
 /////////////////////////////////////////////////////////MANUAL SETTINGS/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #define NO_ENCODER_MODE        0       // useful for people with no rotary dial to see what resolution/signal/slot they are currently working with (instantly updates when loading preset using webapp/turning power off of console  (if realtime updating is enabled))
                                        // 0 = NO ENCODER MODE SET TO OFF
@@ -30,26 +29,38 @@
                                        // 1000  = 1 second,
                                        // 10000 = 10 SECONDS 
 
-#define SIGNAL_DISPLAY_ONLY_SLOTNAME 0 //only display current loaded SLOT NAME on TOP line of SIGNAL, NO scrolling text or resolution displayed.
+#define SIGNAL_DISPLAY_ONLY_SLOTNAME 0 //only display current loaded SLOT NAME on TOP-TEXT of SIGNAL, NO scrolling text or resolution displayed. BOTTOM-TEXT displays as normal.
                                        // 0 = disabled                                                                        
                                        // 1 = enabled
 
 //if you want to make your own screensaver splash go to " void LCD_printSplash(int logo_select) " in the LCDMenu.cpp file.
 //and use the link listed there to generate your own splash screen to use with this! just replace whats there and add nothing more. 
 //or just make your own custom version however you want with lcd.print("example");
-#define LCD_SPLASH_SCREEN_TYPE 1       // 0 = add in your own custom text in LCDmenu.cpp LCD_printSplash() function (located in LCDMenu.cpp)
+#define LCD_SPLASH_SCREEN_TYPE 1       // 0 = add in your own custom text in LCD_printSplash() function (located in LCDMenu.cpp)
                                        // 1 = display ANIMATED "GBS[C]" splashscreen
                                        // 2 = display NON-animated "GBS[C]" splashscreen
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //EXPERIMENTAL/TESTING: 
-#define SAVE_RESOLUTION_PER_SLOT  0       //currently LCDMENU >RESOLUTIONS only loads a resolution temporarily, with this enabled, it will save resolution and load resolution PER SLOT but with some caveats:                                
+#define SAVE_RESOLUTION_PER_SLOT   0      //currently LCDMENU >RESOLUTIONS only loads a resolution temporarily, with this enabled, it will save resolution and load resolution PER SLOT but with some caveats:                                
                                           //gbsc must already be connected to any powered signal before saving new resolution to file,
-                                          // it also will not update in WEB APPLICATION what current saved resolution is under preset slot name (will just say last saved resolution/"custom")
+                                          // it also will not update in WEB APPLICATION what current saved resolution is under preset slot name (will just say last webapp saved resolution/"custom")
                                           // 0 = disabled
                                           // 1 = enabled         
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//EXPERIMENTAL/TESTING: 
+#define BYPASS_RESET_TEMPFIX       0      //currently when loading a bypass resolution preset, it takes a long time to load, and it gets stuck on passthrough/bypass when switching off to a normal resolution preset
+                                          //enabling this makes it so gbscontrol restarts when you load a bypass preset, or try to switch to a normal preset while currently on a bypass preset
+                                          //after you switch to a normal preset, it will no longer restart each time until you once again load a bypass preset
+                                          // 0 = disabled
+                                          // 1 = enabled
+                                          // 2 = show "BYPASS LOADING" text when restarting
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 
 
 
@@ -134,7 +145,6 @@ void LCD_scrollResolutionAndSlot(const String &resolution, const String &slotNam
 
 //////////////////////////////////////////////////////////////
 //menu location and navigation functions
-
 void LCD_resetToXMenu(int location);
 void LCD_LOAD_MENU_OPTIONS();
 
@@ -165,7 +175,6 @@ void createDefaultSlotsIfMissing();
 
 
 //////////////////////////////////////////////////////////////
-//enums
 enum LCDMenuState {
     MAIN_MENU,
     FILTER_MENU,
@@ -196,7 +205,7 @@ enum LOCATIONS { //for use with resettoXmenu
 void load_GLOBAL_PER_SLOT();
 void save_GLOBAL_PER_SLOT();
 void apply_GLOBAL_PER_SLOT(int slotIndex);
-void initDefault_GLOBAL_PER_SLOT(uint8_t slotIndex); // called from inside load_GLOBAL_PER_SLOT function
+void initDefault_GLOBAL_PER_SLOT(uint8_t slotIndex); 
 extern int USE_GLOBALSET_PER_SLOT;
 
 
@@ -215,7 +224,7 @@ extern int USE_GLOBALSET_PER_SLOT;
     uint8_t deintMode;
 
     //uint8_t USE_GLOBALSET_PER_SLOT; //currently saving in LCD_settings.txt file instead
-    uint8_t reserved[8]; // padding for future expansion (change reserved to -1 (ex. 7) if you add new variable to struct)
+    uint8_t reserved[8]; 
 };
 extern GlobalSlotOptions globalOptions[MAX_SLOTS];
 //////////////////////////////////////////////////////////////////////////////////
