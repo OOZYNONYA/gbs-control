@@ -57,7 +57,6 @@
                                           //after you switch to a normal preset, it will no longer restart each time until you once again load a bypass preset
                                           // 0 = disabled
                                           // 1 = enabled
-                                          // 2 = show "BYPASS LOADING" text when restarting
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 

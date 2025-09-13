@@ -958,7 +958,8 @@ const char slotCharset[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcedefghijklmnopqrstuvwxy
                   delay(300);
                  
           
-
+if (BYPASS_RESET_TEMPFIX == 1)
+{
 ///////////////////////////////////////////BYPASS_TEMPFIX for bypass getting stuck for long periods on load and on switch off of bypass-preset/////////////////////////////////////////////////////
 //remove if we ever find a better solution
           if(LCDslotsObject.slot[slotIndexApply].presetID == 0x21 || LCDslotsObject.slot[slotIndexApply].presetID == 0x22) //if loading bypass resolution using preset
@@ -980,7 +981,7 @@ const char slotCharset[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcedefghijklmnopqrstuvwxy
             ESP.reset();
            }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+}
 
            
             uopt->presetPreference = OutputCustomized;
