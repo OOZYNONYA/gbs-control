@@ -51,8 +51,8 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//EXPERIMENTAL/TESTING: 
-#define BYPASS_RESET_TEMPFIX       0      //currently when loading a bypass resolution preset, it takes a long time to load, and it gets stuck on passthrough/bypass when switching off to a normal resolution preset
+//EXPERIMENTAL/TESTING:                   //TEMPORARY FIX
+#define RESET_ON_BYPASS            0      //currently when loading a bypass resolution preset, it takes a long time to load, and it gets stuck on passthrough/bypass when switching off to a normal resolution preset
                                           //enabling this makes it so gbscontrol restarts when you load a bypass preset, or try to switch to a normal preset while currently on a bypass preset
                                           //after you switch to a normal preset, it will no longer restart each time until you once again load a bypass preset
                                           // 0 = disabled

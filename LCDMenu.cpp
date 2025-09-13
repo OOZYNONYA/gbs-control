@@ -957,16 +957,17 @@ const char slotCharset[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcedefghijklmnopqrstuvwxy
                   lcd.print("LOADED!");  
                   delay(300);
                  
-          
-if (BYPASS_RESET_TEMPFIX == 1)
-{
-///////////////////////////////////////////BYPASS_TEMPFIX for bypass getting stuck for long periods on load and on switch off of bypass-preset/////////////////////////////////////////////////////
-//remove if we ever find a better solution
+
+
+
+ ///////////////////////////////////////////BYPASS_TEMPFIX for bypass getting stuck for long periods on load and on switch off of bypass-preset///////////////////////////////////////////
+        if (RESET_ON_BYPASS == 1)
+        {
+
           if(LCDslotsObject.slot[slotIndexApply].presetID == 0x21 || LCDslotsObject.slot[slotIndexApply].presetID == 0x22) //if loading bypass resolution using preset
           {
                uopt->presetPreference = OutputBypass;
               // saveUserPrefs();
-               //uopt->presetPreference = OutputCustomized;
 
              BYPASS_TEMPFIX = 1; //if last preset loaded was a bypass one, crude fix = 1;
              saveLCDSettingsFile(); //save fix to file
@@ -974,15 +975,16 @@ if (BYPASS_RESET_TEMPFIX == 1)
              ESP.reset(); //restart system
             
           }
-           else if (BYPASS_TEMPFIX == 1) //if user switches to non-bypass preset but its still stuck on passthrough/bypass, then restart to to remove the frozen state
+           else if (BYPASS_TEMPFIX == 1) //if user switches to non-bypass preset but its still stuck on passthrough/bypass, then restart to remove the frozen state
            {
             BYPASS_TEMPFIX = 0; //now on next boot user can load any non-bypass preset slot and not have to reset each time unless they go back onto bypass.
             saveLCDSettingsFile();
+            delay(50);
             ESP.reset();
            }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-}
 
+        }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
            
             uopt->presetPreference = OutputCustomized;
             if (rto->videoStandardInput == 14) {
@@ -998,7 +1000,6 @@ if (BYPASS_RESET_TEMPFIX == 1)
 
         if (RESET_TO_MAIN_MENU == 1)//go back to main menu after loading a preset, otherwise wait for back button press.
         {
-       /////////////////////////////////////
             LCD_page = 0;
             LCD_subsetFrame = 0;
             LCD_main_pointer = 15; //15 cursor back on presets when arriving back into main menu
@@ -1008,7 +1009,6 @@ if (BYPASS_RESET_TEMPFIX == 1)
             LCD_menuItem = 2;      //2 cursor back on presets when arriving back into main menu
             LCD_pointer_count = 0;
             //currentMenu = MAIN_MENU;
-       /////////////////////////////////////
        }  
         else if (RESET_TO_MAIN_MENU != 1) { LCD_resetToXMenu(RETURN_TO_PRESETS);}
      
