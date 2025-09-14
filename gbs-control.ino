@@ -9742,13 +9742,12 @@ void startWebserver()
 
 //LCD/////////////////////////////////////////////////////////////////////////////////////
         #if USE_LCD_MENU 
-        {//apply global_per_slot_settings when preset slot is loaded in the web application interface
+            //apply global_per_slot_settings when preset slot is loaded in the web application interface
             if(USE_GLOBALSET_PER_SLOT == 1) 
             {
               int slotIndexGlobal = getCurrentSlotIndexFromPresetSlotChar(uopt->presetSlot);
               apply_GLOBAL_PER_SLOT(slotIndexGlobal);
             }
-        } 
         #endif
 /////////////////////////////////////////////////////////////////////////////////////////
 
@@ -9826,6 +9825,7 @@ void startWebserver()
 
                 //LCD//////////////////////////////////////////////////////////////////////////////////////////////////
                 #if USE_LCD_MENU
+
                      if(USE_GLOBALSET_PER_SLOT == 1)
                     {
                      int slotIndex = getCurrentSlotIndexFromPresetSlotChar(uopt->presetSlot); 
@@ -9842,7 +9842,7 @@ void startWebserver()
 
                      save_GLOBAL_PER_SLOT();
                     }
-                }
+                
                 #endif
                 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
