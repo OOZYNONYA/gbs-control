@@ -7,13 +7,12 @@
 #define NO_ENCODER_MODE        0       // useful for people with no rotary dial to see what resolution/signal/slot they are currently working with (instantly updates when loading preset using webapp/turning power off of console  (if realtime updating is enabled))
                                        // 0 = NO ENCODER MODE SET TO OFF
                                        // 1 = NO ENCODER MODE SET TO ON
-                                       // 2 = NO ENCODER MODE SET TO ON AND LCD BACKLIGHT WILL BE TURNED OFF
-                                       // X = (NOT IMPLEMENTED) Turn on backlight for 10 seconds every time a new signal is found, or lost      
+                                       // 2 = NO ENCODER MODE SET TO ON AND LCD BACKLIGHT WILL BE TURNED OFF     
 
-#define USE_REALTIME_UPDATING  1       // 1 = when you make or change a preset name your changes will instantly appear in the menu    
-                                       // 0 = you will need to restart the GBS to see changes with saved slot names and such. 
-
-                                            
+#define USE_REALTIME_UPDATING  1       // 0 = you will need to restart the GBS to see changes with saved slot names and such.  
+                                       // 1 = when you make or change a preset name your changes will instantly appear in the menu 
+                                       
+    
 #define RESET_TO_MAIN_MENU     1       // 0 = do not reset to main menu from resolutions/presets/ after selecting an option  (stay inside menu after until back is selected)
                                        // 1 = reset to main menu        from resolutions/presets/ after selecting an option
                                        // USE CASE EXAMPLE: if you want to continuously cycle through resolutions/presets without having to manually re-enter the menu every single time.

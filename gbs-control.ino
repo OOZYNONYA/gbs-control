@@ -67,8 +67,6 @@ volatile int oled_pointer_count = 0;
 volatile int oled_sub_pointer = 0;
 #endif
 
-
-
 #if USE_LCD_MENU //LCD
 #include <hd44780.h>                       
 #include <hd44780ioClass/hd44780_I2Cexp.h> 
@@ -7377,7 +7375,11 @@ void setup()
         display.drawXbm(2, 2, gbsicon_width, gbsicon_height, gbsicon_bits); 
         display.display(); 
 
-        if(USE_LCD_MENU) { LCD_printSplash(LCD_SPLASH_SCREEN_TYPE); }  //LCD STARTUP SPLASH SCREEN
+
+        
+        #if USE_LCD_MENU
+        LCD_printSplash(LCD_SPLASH_SCREEN_TYPE);  //LCD STARTUP SPLASH SCREEN
+        #endif
    
         handleWiFi(0);
         delay(1);
@@ -9737,18 +9739,18 @@ void startWebserver()
                 uopt->presetPreference = OutputCustomized;
                 saveUserPrefs();
 
-       
-        //LCD/////////////////////////////////////////////////////////////////////////////////////
-         if(USE_LCD_MENU == 1)
+
+//LCD/////////////////////////////////////////////////////////////////////////////////////
+        #if USE_LCD_MENU 
         {//apply global_per_slot_settings when preset slot is loaded in the web application interface
             if(USE_GLOBALSET_PER_SLOT == 1) 
             {
               int slotIndexGlobal = getCurrentSlotIndexFromPresetSlotChar(uopt->presetSlot);
               apply_GLOBAL_PER_SLOT(slotIndexGlobal);
             }
-        } /////////////////////////////////////////////////////////////////////////////////////////
-        
-
+        } 
+        #endif
+/////////////////////////////////////////////////////////////////////////////////////////
 
                 result = true;
             }
@@ -9820,9 +9822,10 @@ void startWebserver()
                 slotsBinaryOutputFile.write((byte *)&slotsObject, sizeof(slotsObject));
                 slotsBinaryOutputFile.close();
 
+
+
                 //LCD//////////////////////////////////////////////////////////////////////////////////////////////////
-                if(USE_LCD_MENU == 1)
-                {
+                #if USE_LCD_MENU
                      if(USE_GLOBALSET_PER_SLOT == 1)
                     {
                      int slotIndex = getCurrentSlotIndexFromPresetSlotChar(uopt->presetSlot); 
@@ -9839,7 +9842,9 @@ void startWebserver()
 
                      save_GLOBAL_PER_SLOT();
                     }
-                }///////////////////////////////////////////////////////////////////////////////////////////////////////
+                }
+                #endif
+                ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
                 result = true;
             }

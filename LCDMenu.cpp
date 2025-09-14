@@ -969,7 +969,7 @@ const char slotCharset[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcedefghijklmnopqrstuvwxy
                uopt->presetPreference = OutputBypass;
               // saveUserPrefs();
 
-             BYPASS_TEMPFIX = 1; //if last preset loaded was a bypass one, crude fix = 1;
+             BYPASS_TEMPFIX = 1; //if last preset loaded was a bypass one, bypass tempfix = 1;
              saveLCDSettingsFile(); //save fix to file
              delay(50);
              ESP.reset(); //restart system
