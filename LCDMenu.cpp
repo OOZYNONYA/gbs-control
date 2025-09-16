@@ -1292,7 +1292,7 @@ else if (logo_select == 3){
 void LCD_LOAD_MENU_OPTIONS()
 {//used at void setup() to setup LCD options and MENU selection preferences.
 
-if(LCD_BACKLIGHT_ALWAYS_OFF == 1) {lcd.noBacklight(); }  //not sure this still belongs here...find a new home
+if(LCD_BACKLIGHT_ALWAYS_OFF == 1) {lcd.noBacklight(); }  //...find a new home for this
 
 
 if (LOAD_DIRECTLY_INTO_SUB_MENU != 0)
@@ -2678,9 +2678,9 @@ void LCD_USER_GlobalSET() {
 }
  else if(global_selection == 5){
   // ----------------------------------------------------------------
-  // OUTPUT RGBHV/Componnent  OPTION
+  // OUTPUT RGBHV/Component  OPTION
   // ----------------------------------------------------------------
-    const char* RGBHVCOMPOptions[] = { "OFF", "ON", "BACK"};
+    const char* RGBHVCOMPOptions[] = { "RGBHV", "COMPONENT", "BACK"};
    
     lcd.clear();
     LCD_encoder_pos = 0;
@@ -2706,9 +2706,9 @@ void LCD_USER_GlobalSET() {
 
           if(USE_GLOBALSET_PER_SLOT == 0)
           {
-                      if (strcmp(RGBHVCOMPOptions[LCD_encoder_pos], "BACK") == 0){ global_selection = 0;                                        break;}
-                 else if (strcmp(RGBHVCOMPOptions[LCD_encoder_pos], "OFF") == 0) { uopt->wantOutputComponent = 0;  saveUserPrefs(); delay(100); break;}
-                 else if (strcmp(RGBHVCOMPOptions[LCD_encoder_pos], "ON") == 0)  { uopt->wantOutputComponent = 1;  saveUserPrefs(); delay(100); break;}
+                      if (strcmp(RGBHVCOMPOptions[LCD_encoder_pos], "BACK") == 0)       { global_selection = 0;                                        break;}
+                 else if (strcmp(RGBHVCOMPOptions[LCD_encoder_pos], "RGBHV") == 0)      { uopt->wantOutputComponent = 0;  saveUserPrefs(); delay(100); break;}
+                 else if (strcmp(RGBHVCOMPOptions[LCD_encoder_pos], "COMPONENT") == 0)  { uopt->wantOutputComponent = 1;  saveUserPrefs(); delay(100); break;}
           }
           else if (USE_GLOBALSET_PER_SLOT == 1)
           {
@@ -3044,10 +3044,46 @@ else if(global_selection == 10){
       while (digitalRead(LCD_pin_switch) == LOW) { delay(10); }
 
            if (strcmp(GLOBALSAVEPERSLOT_Options[LCD_encoder_pos], "BACK") == 0){ global_selection = 0;                                                    break;}
-      else if (strcmp(GLOBALSAVEPERSLOT_Options[LCD_encoder_pos], "OFF") == 0) { USE_GLOBALSET_PER_SLOT  = 0; saveLCDSettingsFile();          delay(100); break;}
+    //else if (strcmp(GLOBALSAVEPERSLOT_Options[LCD_encoder_pos], "OFF") == 0) { USE_GLOBALSET_PER_SLOT  = 0; saveLCDSettingsFile();          delay(100); break;}
       else if (strcmp(GLOBALSAVEPERSLOT_Options[LCD_encoder_pos], "ON") == 0)  { USE_GLOBALSET_PER_SLOT  = 1; saveLCDSettingsFile();          delay(100); break;}
+      else if (strcmp(GLOBALSAVEPERSLOT_Options[LCD_encoder_pos], "OFF") == 0)
+       {
 
-     
+              if      (USE_GLOBALSET_PER_SLOT == 0) { USE_GLOBALSET_PER_SLOT  = 0;        saveLCDSettingsFile();          delay(100);         break;}
+              else if (USE_GLOBALSET_PER_SLOT == 1) {
+              //if user wants to turn off global_settings_per_slot AND they previously had it set to ON, then we reset preference defaults
+
+
+              USE_GLOBALSET_PER_SLOT  = 0; 
+              saveLCDSettingsFile(); 
+              delay(50); 
+
+
+              lcd.clear();
+              lcd.setCursor(0,0);
+              lcd.print("REINITIALIZING");
+
+              //reset only "global settings" preferences to defaults
+              uopt->enableFrameTimeLock           = 0;
+              uopt->frameTimeLockMethod           = 0;
+              uopt->enableAutoGain                = 0;
+              uopt->wantOutputComponent           = 0;
+              uopt->deintMode                     = 0;
+              uopt->preferScalingRgbhv            = 1;
+              uopt->wantTap6                      = 1;
+              uopt->PalForce60                    = 0;
+              uopt->matchPresetSource             = 1;            
+              uopt->wantFullHeight                = 1;                
+              uopt->enableCalibrationADC          = 1;          
+              uopt->disableExternalClockGenerator = 0; 
+
+              delay(50);
+              saveUserPrefs();          //save preferences/global settings to default
+              delay(50);
+              break;
+              }
+      
+        }
      
       //break;
     }

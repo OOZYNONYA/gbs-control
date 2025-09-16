@@ -26,7 +26,7 @@
 
 #define HAVE_BUTTONS 0
 #define USE_NEW_OLED_MENU 0 
-#define USE_ORIGINAL_OLED_MENU 0 
+#define USE_ORIGINAL_OLED_MENU 0 //does not work, missing fonts (comment out all setFont lines to use)
 #define USE_LCD_MENU 1      
 // do not turn on multiple menus simultaneously.         
 
@@ -7613,15 +7613,16 @@ void setup()
     //needed to add this here because it wasn't working higher up in the first section
     #if USE_LCD_MENU //LCD VOID SETUP #2
     
-    if(USE_REALTIME_UPDATING == 0){ LCD_Load_PresetIDs_Into_slotobject();  } //if USE_REALTIME_UPDATING is disabled we dont want it to loop constantly, only run once at startup.
-
-    load_GLOBAL_PER_SLOT();          //create defaults for globalsettingsperslot
+    createDefaultSlotsIfMissing();    
     createDefaultLCDSettingsFile();  //create LCD_settings.txt file and initialize
-    createDefaultSlotsIfMissing();   // If user freshly (flashes all content) to install gbscontrol, they need an empty slot to view and start with
+    load_GLOBAL_PER_SLOT();          //create defaults for globalsettingsperslot
     loadLCDSettingsFile();           // 
 
     lcd.init();                      //LCD DISPLAY START
     LCD_LOAD_MENU_OPTIONS();         //LCD LOAD CURSOR/SUBMENU LOCATIONS FOR USER SELECTABLE OPTIONS
+
+     if(USE_REALTIME_UPDATING == 0){ LCD_Load_PresetIDs_Into_slotobject();  } //if USE_REALTIME_UPDATING is disabled we dont want it to loop constantly, only run once at startup.
+
      if (NO_ENCODER_MODE > 0) {currentMenu = MAIN_MENU; LCD_menuItem = 4; LCD_subsetFrame = 1; LCD_page = 1; LCD_main_pointer = 0; LCD_selectOption = 1; LCD_pointer_count = 0; if (NO_ENCODER_MODE == 2){lcd.noBacklight();}   } // we only want to initiate no_encoder_mode once, we are assuming user has no rotary dial
          
     #endif

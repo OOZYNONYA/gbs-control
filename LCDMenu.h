@@ -42,7 +42,7 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //EXPERIMENTAL/TESTING: 
-#define SAVE_RESOLUTION_PER_SLOT   0      //currently LCDMENU >RESOLUTIONS only loads a resolution temporarily, with this enabled, it will save resolution and load resolution PER SLOT but with some caveats:                                
+#define SAVE_RESOLUTION_PER_SLOT   1      //currently LCDMENU >RESOLUTIONS only loads a resolution temporarily, with this enabled, it will save resolution and load resolution PER SLOT but with some caveats:                                
                                           //gbsc must already be connected to any powered signal before saving new resolution to file,
                                           // it also will not update in WEB APPLICATION what current saved resolution is under preset slot name (will just say last webapp saved resolution/"custom")
                                           // 0 = disabled
@@ -51,7 +51,7 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //EXPERIMENTAL/TESTING:                   //TEMPORARY FIX
-#define RESET_ON_BYPASS            0      //currently when loading a bypass resolution preset, it takes a long time to load, and it gets stuck on passthrough/bypass when switching off to a normal resolution preset
+#define RESET_ON_BYPASS            1      //currently when loading a bypass resolution preset, it takes a long time to load, and it gets stuck on passthrough/bypass when switching off to a normal resolution preset
                                           //enabling this makes it so gbscontrol restarts when you load a bypass preset, or try to switch to a normal preset while currently on a bypass preset
                                           //after you switch to a normal preset, it will no longer restart each time until you once again load a bypass preset
                                           // 0 = disabled
